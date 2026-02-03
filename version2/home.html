@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Master - Every Tool You Need for PDFs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#e85d4e',
+                        secondary: '#2d3748',
+                        accent: '#38a169',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tool-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+        }
+        .drag-active {
+            border-color: #e85d4e;
+            background-color: #fff5f5;
+            transform: scale(1.02);
+        }
+        .progress-bar-striped {
+            background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+            background-size: 1rem 1rem;
+            animation: progress-bar-stripes 1s linear infinite;
+        }
+        @keyframes progress-bar-stripes {
+            0% { background-position: 1rem 0; }
+            100% { background-position: 0 0; }
+        }
+        .category-btn.active {
+            background-color: #e85d4e;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="showHome()">
+                    <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg transform rotate-3 hover:rotate-6 transition-transform">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-secondary tracking-tight">PDF<span class="text-primary">Master</span></span>
+                </div>
+                
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" onclick="showHome()" class="text-gray-700 hover:text-primary font-medium transition-colors">Home</a>
+                    <a href="#tools" class="text-gray-700 hover:text-primary font-medium transition-colors">Tools</a>
+                    <a href="#features" class="text-gray-700 hover:text-primary font-medium transition-colors">Features</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary font-medium transition-colors">Pricing</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <button class="hidden md:block text-gray-600 hover:text-primary font-medium">Sign In</button>
+                    <button class="bg-primary hover:bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                        Sign Up Free
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="mainContent" class="pt-16">
+        
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden bg-gradient-to-br from-red-50 via-white to-purple-50 py-20 lg:py-32">
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full blur-xl animate-float"></div>
+                <div class="absolute top-40 right-20 w-32 h-32 bg-purple-300/20 rounded-full blur-2xl animate-float" style="animation-delay: 1s;"></div>
+                <div class="absolute bottom-20 left-1/3 w-24 h-24 bg-blue-300/20 rounded-full blur-xl animate-float" style="animation-delay: 2s;"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <h1 class="text-5xl md:text-7xl font-bold text-secondary mb-6 leading-tight">
+                    Every tool you need to <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">work with PDFs</span> in one place
+                </h1>
+                <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                    Every tool you need to use PDFs, at your fingertips. All are 100% FREE and easy to use! 
+                    Merge, split, compress, convert, rotate, unlock and watermark PDFs with just a few clicks.
+                </p>
+                
+                <!-- Category Filter -->
+                <div class="flex flex-wrap justify-center gap-3 mb-12" id="categoryFilters">
+                    <button onclick="filterTools('all')" class="category-btn active px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">All</button>
+                    <button onclick="filterTools('organize')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">Organize</button>
+                    <button onclick="filterTools('optimize')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">Optimize</button>
+                    <button onclick="filterTools('convert')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">Convert</button>
+                    <button onclick="filterTools('edit')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">Edit</button>
+                    <button onclick="filterTools('security')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition-all">Security</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Grid -->
+        <section id="tools" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Tools will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow text-center group hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Work offline with Desktop</h3>
+                        <p class="text-gray-600">Batch edit and manage documents locally, with no internet and no limits.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow text-center group hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-2xl mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">On-the-go with Mobile</h3>
+                        <p class="text-gray-600">Your favorite tools, right in your pocket. Keep working on your projects anytime, anywhere.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow text-center group hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Built for business</h3>
+                        <p class="text-gray-600">Automate document management, onboard teams easily, and scale with flexible plans.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Badges -->
+        <section class="py-12 bg-white border-t border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <p class="text-gray-500 mb-6 text-sm uppercase tracking-wide">Trusted by millions worldwide</p>
+                <div class="flex justify-center items-center space-x-8 opacity-60 grayscale hover:grayscale-0 transition-all">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                        <span class="font-semibold">ISO27001 Certified</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-lock text-2xl text-blue-600"></i>
+                        <span class="font-semibold">Secure HTTPS</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-file-alt text-2xl text-red-600"></i>
+                        <span class="font-semibold">PDF Association</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Tool Interface (Hidden by default) -->
+    <div id="toolInterface" class="hidden min-h-screen bg-gray-50 pt-20">
+        <div class="max-w-4xl mx-auto px-4 py-12">
+            <button onclick="showHome()" class="mb-6 flex items-center text-gray-600 hover:text-primary transition-colors bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Tools
+            </button>
+            
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-primary to-red-600 p-8 text-white text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white opacity-10 transform -skew-y-6"></div>
+                    <div id="toolIcon" class="text-5xl mb-4 animate-bounce-slow relative z-10"></div>
+                    <h2 id="toolTitle" class="text-3xl font-bold mb-2 relative z-10"></h2>
+                    <p id="toolDescription" class="text-red-100 relative z-10"></p>
+                </div>
+
+                <div class="p-8">
+                    <!-- Upload Area -->
+                    <div id="uploadArea" class="border-4 border-dashed border-gray-300 rounded-2xl p-12 text-center transition-all cursor-pointer hover:border-primary hover:bg-red-50 relative overflow-hidden" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)" 
+                         ondrop="handleDrop(event)"
+                         onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(event)">
+                        <div class="relative z-10">
+                            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2" id="uploadTitle">Select PDF file</h3>
+                            <p class="text-gray-500 mb-4" id="uploadSubtitle">or drop PDF here</p>
+                            <button class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-red-600 transition-colors shadow-lg">
+                                Select PDF File
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- File Info -->
+                    <div id="fileInfo" class="hidden mt-6 p-6 bg-blue-50 border-2 border-blue-200 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-pdf text-2xl text-red-500"></i>
+                            </div>
+                            <div>
+                                <p id="fileName" class="font-semibold text-gray-800 text-lg"></p>
+                                <p id="fileSize" class="text-sm text-gray-600"></p>
+                            </div>
+                        </div>
+                        <button onclick="removeFile()" class="w-10 h-10 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div id="progressArea" class="hidden mt-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700 flex items-center">
+                                <i class="fas fa-spinner fa-spin mr-2 text-primary"></i>
+                                <span id="progressStatusText">Converting...</span>
+                            </span>
+                            <span id="progressText" class="text-sm font-bold text-primary">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+                            <div id="progressBar" class="bg-primary h-4 rounded-full transition-all duration-300 progress-bar-striped relative" style="width: 0%">
+                                <div class="absolute inset-0 bg-white opacity-20 animate-pulse"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 text-center" id="progressStatus">Initializing...</p>
+                    </div>
+
+                    <!-- Success/Download Area -->
+                    <div id="downloadArea" class="hidden mt-6 text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200 shadow-inner">
+                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce shadow-lg">
+                            <i class="fas fa-check text-5xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Conversion Complete!</h3>
+                        <p class="text-gray-600 mb-6">Your file has been successfully converted and is ready for download.</p>
+                        
+                        <!-- File Details -->
+                        <div class="bg-white rounded-lg p-4 mb-6 max-w-sm mx-auto shadow-sm">
+                            <div class="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                                <i class="fas fa-file-export text-primary"></i>
+                                <span id="conversionDetails">PDF → Word</span>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500" id="outputFileName"></div>
+                        </div>
+
+                        <button onclick="downloadFile()" id="downloadBtn" class="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center mx-auto space-x-3">
+                            <i class="fas fa-download"></i>
+                            <span id="downloadBtnText">Download Word Document</span>
+                        </button>
+                        
+                        <div class="mt-6 flex justify-center space-x-4">
+                            <button onclick="resetTool()" class="text-primary hover:text-red-700 font-medium flex items-center px-4 py-2 rounded-lg hover:bg-red-50 transition-colors">
+                                <i class="fas fa-redo mr-2"></i> Convert another file
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Convert Button -->
+                    <button id="convertBtn" onclick="startConversion()" class="hidden w-full mt-6 bg-gradient-to-r from-primary to-red-600 hover:from-red-600 hover:to-red-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                        <i class="fas fa-cog fa-spin hidden" id="convertSpinner"></i>
+                        <span id="convertBtnText">Convert to Word</span>
+                    </button>
+
+                    <!-- Error Message -->
+                    <div id="errorArea" class="hidden mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-center">
+                        <i class="fas fa-exclamation-circle text-3xl text-red-500 mb-2"></i>
+                        <p class="text-red-700 font-medium" id="errorText">Something went wrong</p>
+                        <button onclick="resetTool()" class="mt-2 text-red-600 hover:text-red-800 text-sm font-semibold">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <span class="text-xl font-bold">PDFMaster</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">The PDF software trusted by millions of users worldwide. Edit, convert, and manage your PDFs with ease.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary transition-colors"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Product</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Tools</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Solutions</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Business</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Education</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Legal</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">&copy; 2024 PDFMaster. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<!-- theese is the new tools for the script-->
+     <script>
+        // Tools Data
+        const tools = [
+            { id: 'merge', name: 'Merge PDF', icon: 'fa-object-group', desc: 'Combine PDFs in the order you want.', category: 'organize', color: 'bg-blue-500' },
+            { id: 'split', name: 'Split PDF', icon: 'fa-cut', desc: 'Separate pages into independent PDF files.', category: 'organize', color: 'bg-blue-500' },
+            { id: 'compress', name: 'Compress PDF', icon: 'fa-compress-alt', desc: 'Reduce file size while maintaining quality.', category: 'optimize', color: 'bg-green-500' },
+            { id: 'pdf-to-word', name: 'PDF to Word', icon: 'fa-file-word', desc: 'Easily convert PDF files to editable DOCX documents.', category: 'convert', color: 'bg-blue-700', popular: true },
+            { id: 'pdf-to-powerpoint', name: 'PDF to PowerPoint', icon: 'fa-file-powerpoint', desc: 'Turn PDF files into editable PPTX slideshows.', category: 'convert', color: 'bg-orange-500' },
+            { id: 'pdf-to-excel', name: 'PDF to Excel', icon: 'fa-file-excel', desc: 'Extract data from PDFs into Excel spreadsheets.', category: 'convert', color: 'bg-green-600' },
+            { id: 'word-to-pdf', name: 'Word to PDF', icon: 'fa-file-pdf', desc: 'Convert DOC/DOCX files to PDF format.', category: 'convert', color: 'bg-blue-600' },
+            { id: 'powerpoint-to-pdf', name: 'PowerPoint to PDF', icon: 'fa-file-pdf', desc: 'Convert PPT/PPTX presentations to PDF.', category: 'convert', color: 'bg-red-500' },
+            { id: 'excel-to-pdf', name: 'Excel to PDF', icon: 'fa-file-pdf', desc: 'Convert Excel spreadsheets to PDF format.', category: 'convert', color: 'bg-green-500' },
+            { id: 'edit', name: 'Edit PDF', icon: 'fa-edit', desc: 'Add text, images, or annotations to PDFs.', category: 'edit', color: 'bg-purple-500', new: true },
+            { id: 'pdf-to-jpg', name: 'PDF to JPG', icon: 'fa-file-image', desc: 'Convert PDF pages to JPG images.', category: 'convert', color: 'bg-pink-500' },
+            { id: 'jpg-to-pdf', name: 'JPG to PDF', icon: 'fa-images', desc: 'Convert images to PDF documents.', category: 'convert', color: 'bg-indigo-500' },
+            { id: 'sign', name: 'Sign PDF', icon: 'fa-signature', desc: 'Add digital signatures to PDF documents.', category: 'edit', color: 'bg-blue-400' },
+            { id: 'watermark', name: 'Watermark', icon: 'fa-stamp', desc: 'Add watermarks to PDF files.', category: 'edit', color: 'bg-yellow-500' },
+            { id: 'rotate', name: 'Rotate PDF', icon: 'fa-sync-alt', desc: 'Rotate PDF pages as needed.', category: 'organize', color: 'bg-teal-500' },
+            { id: 'unlock', name: 'Unlock PDF', icon: 'fa-unlock', desc: 'Remove password protection from PDFs.', category: 'security', color: 'bg-gray-600' },
+            { id: 'protect', name: 'Protect PDF', icon: 'fa-lock', desc: 'Add password protection to PDFs.', category: 'security', color: 'bg-red-600' },
+            { id: 'organize', name: 'Organize PDF', icon: 'fa-th-large', desc: 'Rearrange, delete, or add PDF pages.', category: 'organize', color: 'bg-cyan-500' },
+            { id: 'repair', name: 'Repair PDF', icon: 'fa-tools', desc: 'Fix corrupted or damaged PDF files.', category: 'optimize', color: 'bg-green-700' },
+            { id: 'ocr', name: 'OCR PDF', icon: 'fa-search', desc: 'Convert scanned PDFs to searchable text.', category: 'edit', color: 'bg-purple-600' }
+        ];
+
+        let currentFile = null;
+        let currentTool = null;
+        let convertedFileUrl = null;
+        let convertedFileName = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTools('all');
+            console.log('✅ PDF Master Frontend Loaded');
+            console.log('🔗 Backend URL: http://localhost:3000');
+        });
+
+        // Render Tools Grid
+        function renderTools(category) {
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = '';
+            
+            const filteredTools = category === 'all' ? tools : tools.filter(t => t.category === category);
+            
+            filteredTools.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = 'tool-card bg-white rounded-2xl p-6 shadow-lg border border-gray-100 cursor-pointer group';
+                card.onclick = () => openTool(tool);
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 ${tool.color} rounded-xl flex items-center justify-center text-white text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fas ${tool.icon}"></i>
+                        </div>
+                        ${tool.new ? '<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">NEW</span>' : ''}
+                        ${tool.popular ? '<span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">POPULAR</span>' : ''}
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors">${tool.name}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">${tool.desc}</p>
+                    <div class="mt-4 flex items-center text-primary font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        Use Tool <i class="fas fa-arrow-right ml-2"></i>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Tools
+        function filterTools(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const grid = document.getElementById('toolsGrid');
+            grid.style.opacity = '0';
+            setTimeout(() => {
+                renderTools(category);
+                grid.style.opacity = '1';
+            }, 200);
+        }
+
+        // Open Tool Interface
+        function openTool(tool) {
+            currentTool = tool;
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('toolInterface').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            
+            // Update tool info
+            document.getElementById('toolIcon').innerHTML = `<i class="fas ${tool.icon}"></i>`;
+            document.getElementById('toolTitle').textContent = tool.name;
+            document.getElementById('toolDescription').textContent = tool.desc;
+            
+            // Update button text
+            const convertBtn = document.getElementById('convertBtn');
+            if (tool.id === 'pdf-to-word') {
+                convertBtn.innerHTML = `<span>Convert to Word</span>`;
+            } else if (tool.id === 'pdf-to-excel') {
+                convertBtn.innerHTML = `<span>Convert to Excel</span>`;
+            } else if (tool.id === 'pdf-to-powerpoint') {
+                convertBtn.innerHTML = `<span>Convert to PowerPoint</span>`;
+            } else if (tool.id.startsWith('pdf-to-')) {
+                convertBtn.innerHTML = `<span>Convert to ${tool.name.split(' to ')[1]}</span>`;
+            } else if (tool.id.endsWith('-to-pdf')) {
+                convertBtn.innerHTML = `<span>Convert to PDF</span>`;
+            } else {
+                convertBtn.innerHTML = `<span>Process File</span>`;
+            }
+            
+            resetTool();
+        }
+
+        // Show Home
+        function showHome() {
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('toolInterface').classList.add('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Drag and Drop Handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-active');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-active');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-active');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        }
+
+        function processFile(file) {
+            // Basic validation
+            const maxSize = 50 * 1024 * 1024; // 50MB
+            if (file.size > maxSize) {
+                alert('File size exceeds 50MB limit. Please compress your file first.');
+                return;
+            }
+            
+            currentFile = file;
+            document.getElementById('uploadArea').classList.add('hidden');
+            document.getElementById('fileInfo').classList.remove('hidden');
+            document.getElementById('convertBtn').classList.remove('hidden');
+            
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            
+            console.log(`📄 File selected: ${file.name} (${formatFileSize(file.size)})`);
+        }
+
+        function removeFile() {
+            currentFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadArea').classList.remove('hidden');
+            document.getElementById('fileInfo').classList.add('hidden');
+            document.getElementById('convertBtn').classList.add('hidden');
+            document.getElementById('downloadArea').classList.add('hidden');
+            document.getElementById('progressArea').classList.add('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Main Conversion Function - REAL BACKEND CONNECTION
+        async function startConversion() {
+            if (!currentFile) {
+                alert('Please select a file first');
+                return;
+            }
+            
+            console.log('🚀 Starting conversion...');
+            
+            // Update UI
+            const convertBtn = document.getElementById('convertBtn');
+            const convertBtnText = document.getElementById('convertBtnText');
+            
+            convertBtn.disabled = true;
+            convertBtn.classList.add('opacity-50');
+            convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i><span>Processing...</span>';
+            
+            document.getElementById('fileInfo').classList.add('hidden');
+            document.getElementById('progressArea').classList.remove('hidden');
+            document.getElementById('errorArea').classList.add('hidden');
+            
+            // Simulate progress animation
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress < 90) {
+                    updateProgress(progress);
+                }
+            }, 200);
+            
+            try {
+                // Create FormData
+                const formData = new FormData();
+                formData.append('file', currentFile);
+                formData.append('tool', currentTool.id);
+                
+                console.log(`📤 Uploading ${currentFile.name} to backend...`);
+                
+                // Call backend API
+                const response = await fetch('http://localhost:3000/api/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                clearInterval(progressInterval);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Backend response:', result);
+                
+                if (result.success) {
+                    // Complete progress
+                    updateProgress(100);
+                    
+                    // Store download info
+                    convertedFileUrl = result.downloadUrl;
+                    convertedFileName = result.fileName;
+                    
+                    // Update download UI
+                    document.getElementById('outputFileName').textContent = result.fileName;
+                    document.getElementById('conversionDetails').textContent = 
+                        `${currentTool.name} - ${formatFileSize(result.fileSize || 0)}`;
+                    
+                    // Show success
+                    setTimeout(() => {
+                        document.getElementById('progressArea').classList.add('hidden');
+                        document.getElementById('downloadArea').classList.remove('hidden');
+                    }, 500);
+                    
+                    console.log(`✅ Conversion successful! Ready for download: ${convertedFileName}`);
+                } else {
+                    throw new Error(result.message || 'Conversion failed on server');
+                }
+                
+            } catch (error) {
+                console.error('❌ Conversion error:', error);
+                clearInterval(progressInterval);
+                
+                // Show error
+                document.getElementById('progressArea').classList.add('hidden');
+                document.getElementById('errorArea').classList.remove('hidden');
+                document.getElementById('errorText').textContent = error.message;
+                
+                // Reset button
+                convertBtn.disabled = false;
+                convertBtn.classList.remove('opacity-50');
+                convertBtn.innerHTML = `<span>${convertBtnText.textContent}</span>`;
+                
+                alert(`Conversion failed: ${error.message}\n\nMake sure backend is running at http://localhost:3000`);
+            }
+        }
+
+        function updateProgress(value) {
+            document.getElementById('progressBar').style.width = value + '%';
+            document.getElementById('progressText').textContent = Math.floor(value) + '%';
+            
+            const statusEl = document.getElementById('progressStatus');
+            if (value < 30) {
+                statusEl.textContent = 'Uploading file to server...';
+            } else if (value < 60) {
+                statusEl.textContent = 'Processing document...';
+            } else if (value < 90) {
+                statusEl.textContent = 'Converting format...';
+            } else {
+                statusEl.textContent = 'Finalizing conversion...';
+            }
+        }
+
+        function downloadFile() {
+            if (convertedFileUrl) {
+                // Create full URL
+                const fullUrl = `http://localhost:3000${convertedFileUrl}`;
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.href = fullUrl;
+                link.download = convertedFileName || 'converted-file.docx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log(`📥 Download initiated: ${convertedFileName}`);
+                
+                // Update button to show success
+                const downloadBtn = document.getElementById('downloadBtn');
+                const originalHTML = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i><span>Downloaded!</span>';
+                downloadBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                downloadBtn.classList.add('bg-gray-600');
+                
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalHTML;
+                    downloadBtn.classList.remove('bg-gray-600');
+                    downloadBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                }, 2000);
+            } else {
+                alert('No file available for download. Please convert a file first.');
+            }
+        }
+
+        function resetTool() {
+            currentFile = null;
+            convertedFileUrl = null;
+            convertedFileName = null;
+            
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadArea').classList.remove('hidden');
+            document.getElementById('fileInfo').classList.add('hidden');
+            document.getElementById('convertBtn').classList.add('hidden');
+            document.getElementById('progressArea').classList.add('hidden');
+            document.getElementById('downloadArea').classList.add('hidden');
+            document.getElementById('errorArea').classList.add('hidden');
+            
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressText').textContent = '0%';
+            
+            // Reset button
+            const convertBtn = document.getElementById('convertBtn');
+            convertBtn.disabled = false;
+            convertBtn.classList.remove('opacity-50');
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+    </script>
+ 
+</body>
+</html>

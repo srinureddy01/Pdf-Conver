@@ -1,0 +1,27 @@
+{
+  "name": "converters",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "cors": "^2.8.6",
+    "docx": "^9.5.1",
+    "exceljs": "^4.4.0",
+    "express": "^5.2.1",
+    "mammoth": "^1.11.0",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "pdf2json": "^4.0.2",
+    "pptxgenjs": "^4.0.1",
+    "textract": "^2.5.0"
+  },
+  "description": ""
+}
