@@ -1,0 +1,92 @@
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const pdf = require('pdf-parse'); // Required for text extraction
+const { Document, Packer, Paragraph, TextRun } = require('docx'); // Required for Word creation
+
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(__dirname)); // Serves your home.html
+app.use('/download', express.static(path.join(__dirname, 'converted'))); // Serves converted files
+
+// Create folders if they don't exist
+const dirs = ['uploads', 'converted'];
+dirs.forEach(dir => {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+});
+
+// Multer Setup
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/pdf') cb(null, true);
+        else cb(new Error('Only PDF files are allowed'));
+    }
+});
+
+// Routes
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+
+app.post('/api/convert', upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
+
+        const tool = req.body.tool;
+        const originalName = req.file.originalname;
+        let convertedFileName;
+        let outputPath;
+
+        // Logic for PDF to Word
+        if (tool === 'pdf-to-word') {
+            convertedFileName = originalName.replace('.pdf', '.docx');
+            outputPath = path.join(__dirname, 'converted', `conv-${Date.now()}.docx`);
+
+            const dataBuffer = fs.readFileSync(req.file.path);
+            const data = await pdf(dataBuffer);
+
+            const doc = new Document({
+                sections: [{
+                    children: data.text.split('\n').map(line => new Paragraph({
+                        children: [new TextRun(line)]
+                    }))
+                }]
+            });
+
+            const buffer = await Packer.toBuffer(doc);
+            fs.writeFileSync(outputPath, buffer);
+        } 
+        // Logic for other tools (Placeholder)
+        else {
+            convertedFileName = "processed-" + originalName;
+            outputPath = path.join(__dirname, 'converted', `proc-${Date.now()}.pdf`);
+            fs.copyFileSync(req.file.path, outputPath);
+        }
+
+        res.json({
+            success: true,
+            fileName: convertedFileName,
+            downloadUrl: `/download/${path.basename(outputPath)}`
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error during conversion' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`🚀 PDF Master Server running at http://localhost:${port}`);
+});
