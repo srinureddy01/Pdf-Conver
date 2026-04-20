@@ -1,5 +1,5 @@
-#In the repo my vison is create a clone of the pdf converter which is for free there are some operations like:
-#a) convert pdf to word
+#In the repo my vison is create a clone of the pdf converter which is for free there are some operations like:<br>
+#a) convert pdf to word <br>
 b) word to pdf
 c) Lock pdf
 f) Sign pdf
